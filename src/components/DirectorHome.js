@@ -28,11 +28,15 @@ const DirectorHome = () => {
   // Fonction qui gère le clic sur une carte
   const handleCardClick = (title) => {
     if (title === 'Gérer Dépôts') {
-      navigate('/depot'); // Redirige vers la page Depot.js
+      navigate('/depot');
+    } else if (title === 'Gérer Gérants') {
+      navigate('/gerants');
     } else {
-      alert(title); // Affiche un message pour les autres cartes
+      console.warn(`Aucune route définie pour ${title}`);
+      alert('Cette fonctionnalité n\'est pas encore disponible.');
     }
   };
+  
 
   return (
     <div

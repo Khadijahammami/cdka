@@ -10,6 +10,7 @@ import SignupFormclient from "./components/SignUpFormclient";
 import GerantHome from "./components/GerantHome";
 import ClientHome from "./components/ClientHome";
 import Depot from "./components/Depot";
+import Gerants from "./components/Gerants";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/directhome" element={<DirectorHome />} />
         <Route path="/depot" element={<Depot/>}/>
+           <Route path="/gerants"  element={<Gerants/>}/>
       </Routes>
     </Router>
   );
