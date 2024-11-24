@@ -22,20 +22,41 @@ const SignUpFormgereant = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password, passwordconf } = formData;
-
+    const { nom, email, password, passwordconf } = formData;
+  
     if (password !== passwordconf) {
-      setMessage("Les mots de passe ne correspondent pas.");
+      alert("Les mots de passe ne correspondent pas.");
       return;
     }
-
-    // Simulation de traitement
-    if (email === "test@example.com" && password === "password123") {
-      setMessage("Inscription réussie !");
-    } else {
-      setMessage("Veuillez vérifier vos informations.");
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nom,
+          email,
+          password,
+          passwordconf,
+        }),
+      });
+  
+      const data = await response.json();  // S'assurer de récupérer la réponse JSON
+  
+      if (response.ok) {
+         // Afficher le message de succès
+        alert("Inscription réussie !");  // Alerte de succès
+      } else {
+         // Afficher le message d'erreur
+        alert("Échec de l'inscription : " + data.message);  // Alerte d'échec
+      }
+    } catch (error) {
+   
+      alert("Erreur de connexion au serveur.");  // Alerte de connexion au serveur
     }
   };
 

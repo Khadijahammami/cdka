@@ -8,7 +8,7 @@ const SignIn = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();  // Initialisation de useNavigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,28 +18,40 @@ const SignIn = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
-
-    // Simulation de connexion (à remplacer par un appel API réel)
-    if (email === "directeur@example.com" && password === "password123") {
-      setMessage("Connexion réussie !");
-      // Redirection vers la page du directeur
-      navigate("/directhome");
-    } else if (email === "gerant@example.com" && password === "password123") {
-      setMessage("Connexion réussie !");
-      // Redirection vers la page du gérant
-      navigate("/geranthome");
-    } else if (email === "client@example.com" && password === "password123") {
-      setMessage("Connexion réussie !");
-      // Redirection vers la page du client
-      navigate("/clienthome");
-    } else {
-      setMessage("Email ou mot de passe incorrect.");
+  
+    // Appel à l'API de connexion
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+  
+      if (response.ok) {
+        setMessage("Connexion réussie !");
+        // Redirection en fonction de l'email
+        const token = data.token;
+        localStorage.setItem("token", token);  // Sauvegarder le token dans localStorage
+  
+        if (email.includes("@directeur")) {
+          navigate("/directhome");
+        } else if (email.includes("@gerant")) {
+          navigate("/geranthome");
+        } else if (email.includes("@client")) {
+          navigate("/clienthome");
+        }
+      } else {
+        setMessage(data.message);
+      }
+    } catch (error) {
+      setMessage("Erreur de connexion.");
     }
   };
-
+  
   return (
     <div
       style={{

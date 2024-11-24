@@ -24,15 +24,41 @@ const SignupFormclient = () => {
   };
 
   // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password, passwordConf, nom, adresse, phone } = formData;
-
-    // Simulation de validation (à remplacer par un appel API réel)
-    if (email === "test@example.com" && password === "password123" && password === passwordConf) {
-      setMessage("Inscription réussie !");
-    } else {
-      setMessage("Erreur dans les informations fournies.");
+    const { nom, email, password, passwordconf } = formData;
+  
+    if (password !== passwordconf) {
+      alert("Les mots de passe ne correspondent pas.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nom,
+          email,
+          password,
+          passwordconf,
+        }),
+      });
+  
+      const data = await response.json();  // S'assurer de récupérer la réponse JSON
+  
+      if (response.ok) {
+         // Afficher le message de succès
+        alert("Inscription réussie !");  // Alerte de succès
+      } else {
+         // Afficher le message d'erreur
+        alert("Échec de l'inscription : " + data.message);  // Alerte d'échec
+      }
+    } catch (error) {
+   
+      alert("Erreur de connexion au serveur.");  // Alerte de connexion au serveur
     }
   };
 

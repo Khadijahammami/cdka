@@ -6,6 +6,8 @@ const SignupForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    nom: "",
+    passwordconf: "",
   });
 
   const [message, setMessage] = useState("");
@@ -20,18 +22,45 @@ const SignupForm = () => {
   };
 
   // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = formData;
-
-    // Simulation de connexion (à remplacer par un appel API réel)
-    if (email === "test@example.com" && password === "password123") {
-      setMessage("Connexion réussie !");
-    } else {
-      setMessage("Email ou mot de passe incorrect.");
+    const { nom, email, password, passwordconf } = formData;
+  
+    if (password !== passwordconf) {
+      alert("Les mots de passe ne correspondent pas.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nom,
+          email,
+          password,
+          passwordconf,
+        }),
+      });
+  
+      const data = await response.json();  // S'assurer de récupérer la réponse JSON
+  
+      if (response.ok) {
+         // Afficher le message de succès
+        alert("Inscription réussie !");  // Alerte de succès
+      } else {
+         // Afficher le message d'erreur
+        alert("Échec de l'inscription : " + data.message);  // Alerte d'échec
+      }
+    } catch (error) {
+   
+      alert("Erreur de connexion au serveur.");  // Alerte de connexion au serveur
     }
   };
-return (
+  
+  return (
     <div
       style={{
         display: "flex",
@@ -64,7 +93,7 @@ return (
         </legend>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: "20px" }}>
-            <label htmlFor="email">
+            <label htmlFor="nom">
               <p
                 style={{
                   fontSize: "14px",
@@ -73,14 +102,14 @@ return (
                   marginLeft: "5px",
                 }}
               >
-               Nom Utilisateur :
+                Nom Utilisateur :
               </p>
             </label>
             <input
               type="text"
               id="nom"
               name="nom"
-              value={formData.email}
+              value={formData.nom}
               onChange={handleChange}
               required
               style={{
@@ -103,7 +132,7 @@ return (
                   marginLeft: "5px",
                 }}
               >
-               E-Mail :
+                E-Mail :
               </p>
             </label>
             <input
@@ -136,7 +165,7 @@ return (
                 Mot de passe :
               </p>
             </label>
-<input
+            <input
               type="password"
               id="password"
               name="password"
@@ -154,7 +183,7 @@ return (
             />
           </div>
           <div style={{ marginBottom: "20px" }}>
-            <label htmlFor="password">
+            <label htmlFor="passwordconf">
               <p
                 style={{
                   fontSize: "14px",
@@ -163,14 +192,14 @@ return (
                   marginLeft: "5px",
                 }}
               >
-                 confirmer Mot de passe :
+                Confirmer Mot de passe :
               </p>
             </label>
-<input
+            <input
               type="password"
               id="passwordconf"
               name="passwordconf"
-              value={formData.password}
+              value={formData.passwordconf}
               onChange={handleChange}
               required
               style={{
@@ -247,4 +276,4 @@ return (
   );
 };
 
-export default SignupForm
+export default SignupForm;
