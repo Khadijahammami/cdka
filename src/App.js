@@ -12,6 +12,11 @@ import ClientHome from "./components/ClientHome";
 import Depot from "./components/Depot";
 import Gerants from "./components/Gerants";
 import Client from "./components/GererClient";
+import GereFournisseur from "./components/GereFournisseurs";
+import AjoutFournisseurs from "./components/AjoutFournisseurs";
+import GererMateriels from "./components/GererMateriels";
+import AjouterMateriel from "./components/AjouterMateriel";
+import EditMaterialForm from "./components/EditMaterialForm";
 
 function App() {
   return (
@@ -27,10 +32,17 @@ function App() {
         <Route path="/signupForm" element={<SignupForm />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/directhome" element={<DirectorHome />} />
-        <Route path="/depot" element={<Depot/>}/>
-        <Route path="/gerants"  element={<Gerants/>}/>
+        <Route path="/depot" element={<Depot />} />
+        <Route path="/gerants" element={<Gerants />} />
         <Route path="/depot" element={<Depot />} />
         <Route path="/client" element={<Client />} />
+
+        <Route path="/gerefournisseurs" element={<GereFournisseur />} />
+        <Route path="/ajoutfournisseurs" element={<AjoutFournisseurs />} />
+
+        <Route path="/gerermateriels" element={<GererMateriels />} />
+        <Route path="/ajoutermateriel" element={<AjouterMateriel />} />
+        <Route path="/editmaterialform" element={<EditMaterialForm />} />
       </Routes>
     </Router>
   );

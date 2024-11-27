@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { FaPlus, FaEdit, FaMinus } from 'react-icons/fa';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FaPlus, FaEdit, FaMinus } from "react-icons/fa";
+import axios from "axios";
+import Logo from "../images/logo.png";
 
 const Gerants = () => {
   const [gerants, setGerants] = useState([]);
@@ -10,13 +11,38 @@ const Gerants = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const [newGerant, setNewGerant] = useState({
-    nom: '',
-    prenom: '',
-    adresse: '',
-    telephone: '',
-    email: '',
-    depot: '',
+    nom: "",
+    prenom: "",
+    adresse: "",
+    telephone: "",
+    email: "",
+    depot: "",
   });
+
+  const styles = {
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "20px",
+      borderBottom: "2px solid #e6e6e6",
+      paddingBottom: "10px",
+    },
+    logo: {
+      height: "60px",
+    },
+    profile: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+    },
+    profileIcon: {
+      width: "30px",
+      height: "30px",
+      borderRadius: "50%",
+      backgroundColor: "#e6e6e6",
+    },
+  };
 
   const fetchGerants = async () => {
     try {
@@ -38,7 +64,14 @@ const Gerants = () => {
     try {
       await axios.post("http://localhost:5000/api/gerants", newGerant);
       fetchGerants();
-      setNewGerant({ nom: '', prenom: '', adresse: '', telephone: '', email: '', depot: '' });
+      setNewGerant({
+        nom: "",
+        prenom: "",
+        adresse: "",
+        telephone: "",
+        email: "",
+        depot: "",
+      });
       setIsAddFormVisible(false);
       alert("Gérant ajouté avec succès !");
     } catch (error) {
@@ -49,10 +82,10 @@ const Gerants = () => {
 
   const handleEditGerant = () => {
     if (selectedIndex === null) {
-      alert('Veuillez sélectionner un gérant pour le modifier.');
+      alert("Veuillez sélectionner un gérant pour le modifier.");
       return;
     }
-    const { _id, __v, ...gerantWithoutId } = gerants[selectedIndex];  // Exclure _id et __v
+    const { _id, __v, ...gerantWithoutId } = gerants[selectedIndex]; // Exclure _id et __v
     setGerantToEdit(gerantWithoutId);
     setIsEditFormVisible(true);
   };
@@ -62,9 +95,12 @@ const Gerants = () => {
     if (gerantToEdit) {
       try {
         // Assure-toi que l'ID est bien récupéré
-        const id = gerants[selectedIndex]._id;  // Si l'ID est sous _id
+        const id = gerants[selectedIndex]._id; // Si l'ID est sous _id
         console.log("Données envoyées pour la modification :", gerantToEdit); // Log pour vérifier
-        await axios.put(`http://localhost:5000/api/gerants/${id}`, gerantToEdit);
+        await axios.put(
+          `http://localhost:5000/api/gerants/${id}`,
+          gerantToEdit
+        );
         fetchGerants();
         setIsEditFormVisible(false);
         alert("Gérant modifié avec succès !");
@@ -74,14 +110,15 @@ const Gerants = () => {
       }
     }
   };
-  
-  
+
   const handleDeleteGerant = async () => {
     if (selectedIndex === null) {
-      alert('Veuillez sélectionner un gérant pour le supprimer.');
+      alert("Veuillez sélectionner un gérant pour le supprimer.");
       return;
     }
-    const confirmDelete = window.confirm('Êtes-vous sûr de vouloir supprimer ce gérant ?');
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer ce gérant ?"
+    );
     if (confirmDelete) {
       try {
         const id = gerants[selectedIndex]._id;
@@ -108,17 +145,44 @@ const Gerants = () => {
   const handleSelectGerant = (index) => setSelectedIndex(index);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Gestion des Gérants</h2>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
-        <button onClick={handleAddGerant} style={buttonStyle}><FaPlus /> Ajouter</button>
-        <button onClick={handleEditGerant} style={buttonStyle}><FaEdit /> Modifier</button>
-        <button onClick={handleDeleteGerant} style={buttonStyle}><FaMinus /> Supprimer</button>
+    <div>
+      <header style={styles.header}>
+        <img src={Logo} alt="Company Logo" style={styles.logo} />
+        <div style={styles.profile}>
+          <span style={{ fontSize: "12px" }}>Nom et prénom</span>
+          <div style={styles.profileIcon}></div>
+        </div>
+      </header>
+      <h2 style={{ padding: "10px" }}>Gestion des Gérants</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: "20px",
+          padding: "20px",
+        }}
+      >
+        <button onClick={handleAddGerant} style={buttonStyle}>
+          <FaPlus /> Ajouter
+        </button>
+        <button onClick={handleEditGerant} style={buttonStyle}>
+          <FaEdit /> Modifier
+        </button>
+        <button onClick={handleDeleteGerant} style={buttonStyle}>
+          <FaMinus /> Supprimer
+        </button>
       </div>
 
-      <table style={{ width: '100%', marginTop: '20px', borderCollapse: 'collapse' }}>
+      <table
+        style={{
+          width: "100%",
+          marginTop: "20px",
+          borderCollapse: "collapse",
+          padding: "20px",
+        }}
+      >
         <thead>
-          <tr style={{ borderBottom: '2px solid #ddd' }}>
+          <tr style={{ borderBottom: "2px solid #ddd" }}>
             <th>Nom</th>
             <th>Prénom</th>
             <th>Adresse</th>
@@ -132,8 +196,9 @@ const Gerants = () => {
             <tr
               key={index}
               style={{
-                backgroundColor: selectedIndex === index ? '#f0f0f0' : 'transparent',
-                cursor: 'pointer',
+                backgroundColor:
+                  selectedIndex === index ? "#f0f0f0" : "transparent",
+                cursor: "pointer",
               }}
               onClick={() => handleSelectGerant(index)}
             >
@@ -172,35 +237,72 @@ const Gerants = () => {
 };
 
 const buttonStyle = {
-  backgroundColor: '#FFFFFF',
-  color: '#000',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  cursor: 'pointer',
+  backgroundColor: "#FFFFFF",
+  color: "#000",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  cursor: "pointer",
 };
 
-const FormModal = ({ title, gerant, handleChange, handleSubmit, closeModal }) => (
+const FormModal = ({
+  title,
+  gerant,
+  handleChange,
+  handleSubmit,
+  closeModal,
+}) => (
   <div style={modalOverlayStyle}>
     <div style={modalStyle}>
       <fieldset style={fieldsetStyle}>
-        <legend style={{ fontWeight: 'bold', fontSize: '1.2em' }}>{title}</legend>
+        <legend style={{ fontWeight: "bold", fontSize: "1.2em" }}>
+          {title}
+        </legend>
         <form onSubmit={handleSubmit}>
           {Object.keys(gerant).map((key) => (
-            <div key={key} style={{ marginBottom: '10px' }}>
-              <label style={{ display: 'block' }}>{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
+            <div key={key} style={{ marginBottom: "10px" }}>
+              <label style={{ display: "block" }}>
+                {key.charAt(0).toUpperCase() + key.slice(1)}:
+              </label>
               <input
                 type="text"
                 name={key}
                 value={gerant[key]}
                 onChange={handleChange}
                 required
-                style={{ width: '100%', padding: '10px', marginBottom: '10px',border: "1px solid rgba(0, 101, 187)",borderRadius : "10px" }}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  border: "1px solid rgba(0, 101, 187)",
+                  borderRadius: "10px",
+                }}
               />
             </div>
           ))}
-          <button type="submit" style={{ ...buttonStyle, backgroundColor: '#7fb2dd', color: '#fff', marginLeft: '10px',borderColor:'#7fb2dd' }}>Enregistrer</button>
-          
-          <button type="button" onClick={closeModal} style={{ ...buttonStyle, backgroundColor: '#f44336', color: '#fff', marginLeft: '10px',borderColor:'#f44336' }}>
+          <button
+            type="submit"
+            style={{
+              ...buttonStyle,
+              backgroundColor: "#7fb2dd",
+              color: "#fff",
+              marginLeft: "10px",
+              borderColor: "#7fb2dd",
+            }}
+          >
+            Enregistrer
+          </button>
+
+          <button
+            type="button"
+            onClick={closeModal}
+            style={{
+              ...buttonStyle,
+              backgroundColor: "#f44336",
+              color: "#fff",
+              marginLeft: "10px",
+              borderColor: "#f44336",
+            }}
+          >
             Annuler
           </button>
         </form>
@@ -210,23 +312,23 @@ const FormModal = ({ title, gerant, handleChange, handleSubmit, closeModal }) =>
 );
 
 const modalOverlayStyle = {
-  position: 'fixed',
+  position: "fixed",
   top: 0,
   left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 };
 
 const modalStyle = {
-  backgroundColor: '#fff',
-  padding: '20px',
-  borderRadius: '8px',
-  width: '400px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  backgroundColor: "#fff",
+  padding: "20px",
+  borderRadius: "8px",
+  width: "400px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
 };
 
 const fieldsetStyle = {
